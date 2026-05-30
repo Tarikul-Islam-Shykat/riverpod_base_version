@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:riverpod_base/core/services/log_service/log_service_exports.dart';
 import 'package:riverpod_base/core/services/spacing_service/app_spacing.dart';
 import 'package:riverpod_base/shared/dialog/dialogs.dart';
 
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) => MaterialApp(
         title: 'Riverpod Base',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1F8A70)),
         ),
         home: const MyHomePage(title: 'Riverpod Counter'),
       ),
@@ -53,6 +54,7 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final counter = ref.watch(counterProvider);
     final textTheme = Theme.of(context).textTheme;
+    final logger = ref.read(appLoggerServiceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -65,12 +67,12 @@ class MyHomePage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Dialog Review',
+              'Dialog and Log Review',
               style: textTheme.headlineMedium,
             ),
             AppSpacing.verticalSm,
             Text(
-              'Use the buttons below to preview each reusable dialog.',
+              'Preview the reusable dialogs and test the in-app logger from one place.',
               style: textTheme.bodyMedium,
             ),
             AppSpacing.verticalXxl,
@@ -156,6 +158,123 @@ class MyHomePage extends ConsumerWidget {
                   forceUpdate: true,
                   onConfirm: () {},
                 );
+              },
+            ),
+            AppSpacing.verticalXxl,
+            Text(
+              'Logger Actions',
+              style: textTheme.titleLarge,
+            ),
+            AppSpacing.verticalSm,
+            Text(
+              'These buttons create saved logs and print the same entries to the debug console.',
+              style: textTheme.bodyMedium,
+            ),
+            AppSpacing.verticalXxl,
+            _PreviewButton(
+              label: 'Trace Log',
+              onPressed: () async {
+                await logger.t(
+                  'Trace log from preview screen',
+                  tag: 'Preview',
+                  data: {'counter': counter, 'screen': 'main'},
+                );
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Debug Log',
+              onPressed: () async {
+                await logger.d(
+                  'Debugging dialog preview state',
+                  tag: 'Preview',
+                  data: {'dialogsVisible': true, 'counter': counter},
+                );
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Info Log with JSON',
+              onPressed: () async {
+                await logger.i(
+                  'Fetched sample response',
+                  tag: 'Network',
+                  data: {
+                    'success': true,
+                    'message': 'Sample response',
+                    'user': {
+                      'id': 1,
+                      'name': 'Riverpod Base',
+                    },
+                  },
+                );
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Warning Log',
+              onPressed: () async {
+                await logger.w(
+                  'This is a sample warning log',
+                  tag: 'Preview',
+                  data: 'Something may need attention soon.',
+                );
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Error Log',
+              onPressed: () async {
+                await logger.e(
+                  'Sample error log created from preview screen',
+                  tag: 'Preview',
+                  error: 'Test error',
+                  data: {'statusCode': 500, 'endpoint': '/demo'},
+                );
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Fatal Log',
+              onPressed: () async {
+                try {
+                  throw StateError('This is a test fatal failure');
+                } catch (error, stackTrace) {
+                  await logger.f(
+                    'Fatal log captured from preview screen',
+                    tag: 'Preview',
+                    error: error,
+                    stackTrace: stackTrace,
+                    data: {'reason': 'manual preview'},
+                  );
+                }
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Open Log Viewer',
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const LogViewerScreen(),
+                  ),
+                );
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Clear Saved Logs',
+              onPressed: () async {
+                final confirmed = await showDeleteConfirmationDialog(
+                  context: context,
+                  itemName: 'all saved logs',
+                  title: 'Clear saved logs?',
+                  confirmText: 'Clear',
+                );
+
+                if (confirmed == true) {
+                  await logger.clear();
+                }
               },
             ),
           ],
