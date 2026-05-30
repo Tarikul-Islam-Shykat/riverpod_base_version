@@ -47,6 +47,7 @@ class DialogSpacing {
   static double get paddingBottom => 18.h;
 
   static double get iconSize => 64.w;
+  static double get iconInnerSize => 30.sp;
   static double get iconToTitle => 18.h;
   static double get titleToMessage => 10.h;
   static double get messageToActions => AppSpacing.xxl;

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:riverpod_base/shared/dialog/standard_dialog.dart';
+import 'package:riverpod_base/core/services/spacing_service/app_spacing.dart';
+import 'package:riverpod_base/shared/dialog/dialogs.dart';
 
 void main() {
   runApp(
@@ -51,44 +52,111 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final counter = ref.watch(counterProvider);
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: SingleChildScrollView(
+        padding: AppSpacing.sectionPadding,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('You have pushed the button this many times:'),
             Text(
-              '$counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'Dialog Review',
+              style: textTheme.headlineMedium,
             ),
-            SizedBox(height: 24.h),
-            ElevatedButton(
+            AppSpacing.verticalSm,
+            Text(
+              'Use the buttons below to preview each reusable dialog.',
+              style: textTheme.bodyMedium,
+            ),
+            AppSpacing.verticalXxl,
+            Container(
+              padding: AppSpacing.cardPadding,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: AppSpacing.radiusLg,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 18,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Riverpod Counter',
+                    style: textTheme.titleMedium,
+                  ),
+                  AppSpacing.verticalSm,
+                  Text(
+                    'Current count: $counter',
+                    style: textTheme.bodyLarge,
+                  ),
+                ],
+              ),
+            ),
+            AppSpacing.verticalXxl,
+            _PreviewButton(
+              label: 'Delete Confirmation Dialog',
               onPressed: () {
-                showStandardDialog(
+                showDeleteConfirmationDialog(
                   context: context,
-                  title: 'Standard Dialog',
-                  message:
-                      'This is the reusable modern dialog. You can use it for delete, logout, warning, success, and confirmation actions.',
-                  confirmText: 'Confirm',
-                  cancelText: 'Cancel',
-                  type: StandardDialogType.info,
+                  itemName: 'this draft project',
                   onConfirm: () {},
-                  onCancel: () {},
                 );
               },
-              child: const Text('Show Standard Dialog'),
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Logout Dialog',
+              onPressed: () {
+                showLogoutDialog(
+                  context: context,
+                  onConfirm: () {},
+                );
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Under Construction Dialog',
+              onPressed: () {
+                showUnderConstructionDialog(context: context);
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Under Maintenance Dialog',
+              onPressed: () {
+                showUnderMaintenanceDialog(context: context);
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Upgrade Dialog',
+              onPressed: () {
+                showUpgradeDialog(
+                  context: context,
+                  onConfirm: () {},
+                );
+              },
+            ),
+            AppSpacing.verticalMd,
+            _PreviewButton(
+              label: 'Force Upgrade Dialog',
+              onPressed: () {
+                showUpgradeDialog(
+                  context: context,
+                  forceUpdate: true,
+                  onConfirm: () {},
+                );
+              },
             ),
           ],
         ),
@@ -97,6 +165,30 @@ class MyHomePage extends ConsumerWidget {
         onPressed: () => ref.read(counterProvider.notifier).increment(),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class _PreviewButton extends StatelessWidget {
+  const _PreviewButton({
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 52.h,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

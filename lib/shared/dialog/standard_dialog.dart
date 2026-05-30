@@ -3,8 +3,19 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:riverpod_base/core/constants/app_colors.dart';
+import 'package:riverpod_base/core/services/spacing_service/app_spacing.dart';
 import 'package:riverpod_base/core/services/text-service/text-service.dart';
 
+/// Usage example:
+///
+/// await showStandardDialog(
+///   context: context,
+///   title: 'Confirm action?',
+///   message: 'Please confirm before continuing.',
+///   onConfirm: () {
+///     // Run confirm action.
+///   },
+/// );
 enum StandardDialogType { info, success, warning, danger }
 
 Future<bool?> showStandardDialog({
@@ -89,15 +100,15 @@ class StandardDialog extends StatelessWidget {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
       child: Dialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
+        insetPadding: EdgeInsets.symmetric(horizontal: DialogSpacing.inset),
         backgroundColor: Colors.transparent,
         elevation: 0,
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 420.w),
+          constraints: BoxConstraints(maxWidth: DialogSpacing.maxWidth),
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(24.r),
+              borderRadius: BorderRadius.circular(DialogSpacing.dialogRadius),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.12),
@@ -107,26 +118,26 @@ class StandardDialog extends StatelessWidget {
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.fromLTRB(22.w, 22.h, 22.w, 18.h),
+              padding: DialogSpacing.padding,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _DialogIcon(icon: dialogIcon, color: accentColor),
-                  SizedBox(height: 18.h),
+                  SizedBox(height: DialogSpacing.iconToTitle),
                   headingText(
                     text: title,
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     color: const Color(0xFF111827),
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: DialogSpacing.titleToMessage),
                   normalText(
                     text: message,
                     textAlign: TextAlign.center,
                     maxLines: 6,
                     color: const Color(0xFF6B7280),
                   ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: DialogSpacing.messageToActions),
                   _DialogActions(
                     confirmText: confirmText,
                     cancelText: cancelText,
@@ -160,14 +171,14 @@ class _DialogIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 64.w,
-      height: 64.w,
+      width: DialogSpacing.iconSize,
+      height: DialogSpacing.iconSize,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         shape: BoxShape.circle,
       ),
       child: Center(
-        child: Icon(icon, color: color, size: 30.sp),
+        child: Icon(icon, color: color, size: DialogSpacing.iconInnerSize),
       ),
     );
   }
@@ -202,7 +213,7 @@ class _DialogActions extends StatelessWidget {
             backgroundColor: const Color(0xFFF3F4F6),
           ),
         ),
-      if (showCancelButton) SizedBox(width: 12.w),
+      if (showCancelButton) SizedBox(width: DialogSpacing.actionGap),
       Expanded(
         child: _DialogButton(
           text: confirmText,
@@ -240,13 +251,13 @@ class _DialogButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(DialogSpacing.buttonRadius),
         child: Ink(
-          height: 48.h,
+          height: DialogSpacing.buttonHeight,
           decoration: BoxDecoration(
             color: backgroundColor,
             gradient: gradient,
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: BorderRadius.circular(DialogSpacing.buttonRadius),
           ),
           child: Center(
             child: normalText(
