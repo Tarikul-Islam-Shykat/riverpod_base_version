@@ -3,7 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../../core/services/network/error/failure.dart';
 import '../../domain/entities/comment_entity.dart';
 import '../../domain/repositories/comment_repository.dart';
-import '../datasources/comment_remote_data_source.dart';
+import '../datasources/remote/comment_remote_data_source.dart';
 
 class CommentRepositoryImpl implements CommentRepository {
   CommentRepositoryImpl(this._remoteDataSource);

@@ -168,7 +168,7 @@ Checklist:
 - [x] log request/response if needed
 
 Done:
-- [`user_remote_data_source.dart`](data/datasources/user_remote_data_source.dart)
+- [`user_remote_data_source.dart`](data/datasources/remote/user_remote_data_source.dart)
 
 ### 7. Create the repository implementation
 

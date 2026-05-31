@@ -4,10 +4,16 @@ import 'package:riverpod_base/core/services/text-service/text-service.dart';
 import '../../domain/entities/user_entity.dart';
 
 class UserCard extends StatelessWidget {
-  const UserCard({super.key, required this.user, required this.onTap});
+  const UserCard({
+    super.key,
+    required this.user,
+    required this.onTap,
+    required this.onSave,
+  });
 
   final UserEntity user;
   final VoidCallback onTap;
+  final VoidCallback onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +27,23 @@ class UserCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              headingText(
-                text: user.name,
-                maxLines: 2,
-                color: Colors.black87,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: headingText(
+                      text: user.name,
+                      maxLines: 2,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: onSave,
+                    icon: const Icon(Icons.bookmark_add_outlined),
+                    tooltip: 'Save user',
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               normalText(

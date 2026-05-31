@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/services/network/service/network_service.dart';
-import '../../data/datasources/comment_remote_data_source.dart';
+import '../../data/datasources/remote/comment_remote_data_source.dart';
 import '../../data/repositories/comment_repository_impl.dart';
 import '../../domain/entities/comment_entity.dart';
 import '../../domain/repositories/comment_repository.dart';

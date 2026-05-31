@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../../core/constants/endpoinst.dart';
-import '../../../../../core/services/network/error/failure.dart';
-import '../../../../../core/services/network/service/network_service.dart';
-import '../models/comment_model.dart';
+import '../../../../../../core/constants/endpoinst.dart';
+import '../../../../../../core/services/network/error/failure.dart';
+import '../../../../../../core/services/network/service/network_service.dart';
+import '../../models/comment_model.dart';
 
 class CommentRemoteDataSource {
   CommentRemoteDataSource(this._networkService);

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_base/core/services/text-service/text-service.dart';
 
+import '../../domain/entities/local_user_entity.dart';
+import '../../domain/entities/user_entity.dart';
 import '../providers/user_provider.dart';
 import '../widgets/comments_bottom_sheet.dart';
+import '../widgets/saved_user_card.dart';
 import '../widgets/user_card.dart';
 
 class UsersPage extends ConsumerWidget {
@@ -12,6 +15,7 @@ class UsersPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final usersAsync = ref.watch(usersProvider);
+    final savedUserAsync = ref.watch(savedUserProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +35,8 @@ class UsersPage extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          return ref.refresh(usersProvider.future).then((_) {});
+          await ref.refresh(savedUserProvider.future).then((_) {});
+          await ref.refresh(usersProvider.future).then((_) {});
         },
         child: usersAsync.when(
           loading: () => ListView(
@@ -69,6 +74,8 @@ class UsersPage extends ConsumerWidget {
             );
           },
           data: (users) {
+            final savedUser = savedUserAsync.asData?.value;
+
             if (users.isEmpty) {
               return ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -88,19 +95,56 @@ class UsersPage extends ConsumerWidget {
             return ListView.separated(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.all(16),
-              itemCount: users.length,
+              itemCount: users.length + (savedUser == null ? 0 : 1),
               separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
-                final user = users[index];
+                if (savedUser != null && index == 0) {
+                  return SavedUserCard(user: savedUser);
+                }
+
+                final userIndex = savedUser == null ? index : index - 1;
+                final user = users[userIndex];
+
                 return UserCard(
                   user: user,
                   onTap: () => _openCommentsSheet(context, user.id),
+                  onSave: () => _saveUser(context, ref, user),
                 );
               },
             );
           },
         ),
       ),
+    );
+  }
+
+  Future<void> _saveUser(
+    BuildContext context,
+    WidgetRef ref,
+    UserEntity user,
+  ) async {
+    final localUser = LocalUserEntity(
+      id: user.id.toString(),
+      email: user.email,
+      fullName: user.name,
+    );
+
+    final result = await ref.read(localUserUseCaseProvider).saveUser(localUser);
+
+    if (!context.mounted) return;
+
+    result.fold(
+      (failure) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(failure.message)),
+        );
+      },
+      (_) {
+        ref.invalidate(savedUserProvider);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User saved')),
+        );
+      },
     );
   }
 

@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../../core/constants/endpoinst.dart';
-import '../../../../../core/services/network/error/failure.dart';
-import '../../../../../core/services/network/service/network_service.dart';
-import '../models/user_model.dart';
+import '../../../../../../core/constants/endpoinst.dart';
+import '../../../../../../core/services/network/error/failure.dart';
+import '../../../../../../core/services/network/service/network_service.dart';
+import '../../models/user_model.dart';
 
 class UserRemoteDataSource {
   UserRemoteDataSource(this._networkService);
