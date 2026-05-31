@@ -8,6 +8,45 @@ Goal:
 - separate UI, domain, and data clearly
 - make it easy for another agent to continue the work later
 
+## What I Am Mostly Trying To Understand
+
+I want to connect the dots between:
+- where the API call happens
+- who returns the data
+- why the domain and data layers are separate
+- how Riverpod providers depend on each other
+- which provider the UI actually watches
+
+See also:
+- [`connection_flow.md`](connection_flow.md)
+
+## Connecting The Dots
+
+Very simply:
+
+```text
+UI
+-> usersProvider
+-> getUsersUseCaseProvider
+-> userRepositoryProvider
+-> userRemoteDataSourceProvider
+-> NetworkService
+-> API
+```
+
+What each part means:
+- `usersProvider` is the one the UI watches
+- `getUsersUseCaseProvider` gives the feature action
+- `userRepositoryProvider` gives the repository implementation
+- `userRemoteDataSourceProvider` makes the API call
+- `NetworkService` performs the HTTP request
+- the API returns JSON
+- the model turns JSON into Dart objects
+- the repository turns models into entities
+- the use case returns the final result to the UI
+
+This is the main thing I want to understand while building the feature step by step.
+
 ## First Folder To Build
 
 Start with:
@@ -161,10 +200,13 @@ Done:
 The screen should only watch the provider and render state.
 
 Checklist:
-- show loading state
-- show error state
-- show success state
-- use shared text widgets if needed
+- [x] show loading state
+- [x] show error state
+- [x] show success state
+- [x] use shared text widgets if needed
+
+Done:
+- [`users_page.dart`](presentation/pages/users_page.dart)
 
 ### 10. Connect routing
 
