@@ -48,3 +48,4 @@ Navigator.of(context).push(
 - The service keeps the newest logs first.
 - Logs are capped to the most recent 200 entries.
 - `shared_preferences` is used only for simple persistence, not for sensitive data.
+- Each log also captures the caller's source location automatically, so the viewer can show the file path and line number.

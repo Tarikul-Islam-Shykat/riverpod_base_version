@@ -156,6 +156,17 @@ class _LogCard extends StatelessWidget {
                       maxLines: 2,
                       color: Colors.black54,
                     ),
+                    if (entry.sourceLocation != null) ...[
+                      AppSpacing.verticalXs,
+                      SelectableText(
+                        entry.sourceLocation!,
+                        style: TextStyle(
+                          color: Colors.black45,
+                          fontSize: 11,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

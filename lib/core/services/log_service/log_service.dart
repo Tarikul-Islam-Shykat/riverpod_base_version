@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,7 +47,6 @@ class AppLoggerService {
     _logs = const [];
     await _persist();
     _notify();
-    debugPrint('🧹 [Logger] Cleared all logs');
   }
 
   Future<void> t(
@@ -161,6 +159,7 @@ class AppLoggerService {
     Object? error,
     StackTrace? stackTrace,
   }) async {
+    final sourceLocation = _extractSourceLocation(StackTrace.current);
     await initialize();
 
     final entry = AppLogEntry(
@@ -172,6 +171,9 @@ class AppLoggerService {
       details: _formatData(data),
       error: error?.toString(),
       stackTrace: stackTrace?.toString(),
+      sourceFilePath: sourceLocation?.filePath,
+      sourceLineNumber: sourceLocation?.lineNumber,
+      sourceColumnNumber: sourceLocation?.columnNumber,
     );
 
     _logs = [entry, ..._logs].take(_maxLogEntries).toList(growable: false);
@@ -209,7 +211,8 @@ class AppLoggerService {
       ..writeln(
         '${entry.level.emoji} [${entry.level.label.toUpperCase()}] '
         '${_formatTime(entry.timestamp)}'
-        '${entry.tag == null ? '' : ' [${entry.tag}]'}',
+        '${entry.tag == null ? '' : ' [${entry.tag}]'}'
+        '${entry.sourceLocation == null ? '' : ' • ${entry.sourceLocation}'}',
       )
       ..writeln(entry.message);
 
@@ -230,7 +233,6 @@ class AppLoggerService {
     }
 
     final formatted = buffer.toString().trimRight();
-    debugPrint(formatted);
     developer.log(
       formatted,
       name: 'AppLogger',
@@ -294,4 +296,65 @@ class AppLoggerService {
       return null;
     }
   }
+
+  _LogSourceLocation? _extractSourceLocation(StackTrace stackTrace) {
+    for (final frame in stackTrace.toString().split('\n')) {
+      final location = _parseStackFrameLocation(frame);
+      if (location == null) continue;
+      if (_isInternalSource(location.filePath)) continue;
+      return location;
+    }
+    return null;
+  }
+
+  _LogSourceLocation? _parseStackFrameLocation(String frame) {
+    final trimmed = frame.trim();
+    final openParen = trimmed.lastIndexOf('(');
+    final closeParen = trimmed.lastIndexOf(')');
+
+    if (openParen == -1 || closeParen == -1 || closeParen <= openParen) {
+      return null;
+    }
+
+    final location = trimmed.substring(openParen + 1, closeParen);
+    return _parseLocation(location);
+  }
+
+  _LogSourceLocation? _parseLocation(String location) {
+    final lineAndColumn = RegExp(r'^(.*):(\d+):(\d+)$').firstMatch(location);
+    if (lineAndColumn != null) {
+      return _LogSourceLocation(
+        filePath: lineAndColumn.group(1)!,
+        lineNumber: int.parse(lineAndColumn.group(2)!),
+        columnNumber: int.parse(lineAndColumn.group(3)!),
+      );
+    }
+
+    final lineOnly = RegExp(r'^(.*):(\d+)$').firstMatch(location);
+    if (lineOnly != null) {
+      return _LogSourceLocation(
+        filePath: lineOnly.group(1)!,
+        lineNumber: int.parse(lineOnly.group(2)!),
+      );
+    }
+
+    return null;
+  }
+
+  bool _isInternalSource(String filePath) {
+    return filePath.contains('log_service.dart') ||
+        filePath.contains('log_entry.dart');
+  }
+}
+
+class _LogSourceLocation {
+  const _LogSourceLocation({
+    required this.filePath,
+    required this.lineNumber,
+    this.columnNumber,
+  });
+
+  final String filePath;
+  final int lineNumber;
+  final int? columnNumber;
 }

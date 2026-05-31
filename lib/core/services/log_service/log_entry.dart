@@ -39,6 +39,9 @@ class AppLogEntry {
     this.details,
     this.error,
     this.stackTrace,
+    this.sourceFilePath,
+    this.sourceLineNumber,
+    this.sourceColumnNumber,
   });
 
   final String id;
@@ -49,6 +52,24 @@ class AppLogEntry {
   final String? details;
   final String? error;
   final String? stackTrace;
+  final String? sourceFilePath;
+  final int? sourceLineNumber;
+  final int? sourceColumnNumber;
+
+  String? get sourceLocation {
+    final filePath = sourceFilePath;
+    final lineNumber = sourceLineNumber;
+
+    if (filePath == null || lineNumber == null) {
+      return null;
+    }
+
+    final buffer = StringBuffer('$filePath:$lineNumber');
+    if (sourceColumnNumber != null) {
+      buffer.write(':$sourceColumnNumber');
+    }
+    return buffer.toString();
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -60,6 +81,9 @@ class AppLogEntry {
       'details': details,
       'error': error,
       'stackTrace': stackTrace,
+      'sourceFilePath': sourceFilePath,
+      'sourceLineNumber': sourceLineNumber,
+      'sourceColumnNumber': sourceColumnNumber,
     };
   }
 
@@ -73,6 +97,9 @@ class AppLogEntry {
       details: json['details'] as String?,
       error: json['error'] as String?,
       stackTrace: json['stackTrace'] as String?,
+      sourceFilePath: json['sourceFilePath'] as String?,
+      sourceLineNumber: json['sourceLineNumber'] as int?,
+      sourceColumnNumber: json['sourceColumnNumber'] as int?,
     );
   }
 }
