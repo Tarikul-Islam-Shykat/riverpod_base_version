@@ -23,8 +23,8 @@ final getPostsUseCaseProvider = Provider<GetPostsUseCase>((ref) {
 });
 
 final postsProvider = FutureProvider.autoDispose<List<PostEntity>>((ref) async {
-  final useCase = ref.watch(getPostsUseCaseProvider);
-  final result = await useCase();
+  final useCase = ref.read(getPostsUseCaseProvider);
+  final result = await useCase(limit: 20);
 
   return result.fold(
     (failure) => throw Exception(failure.message),
