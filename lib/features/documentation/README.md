@@ -6,3 +6,6 @@ Current docs:
 - [Posts GET Feature Architecture](posts_get_feature_architecture.md)
 - [Posts GET Feature Architecture V2](posts_get_feature_architecture_v2.md)
 - [User Save + Sync Checklist](user_save_sync_checklist.md)
+- [Terms Reference](terms.md)
+- [Riverpod Interview Guide](riverpod_terms_interview_guide.md)
+- [Provider Wiring Notes](provider_wiring_notes.md)
