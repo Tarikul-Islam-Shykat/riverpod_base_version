@@ -97,5 +97,6 @@ After you run it, the script will ask whether you want:
 
 - `overwrite` to replace matching files and update the package name
 - `adjust` to sync starter files and merge only the missing starter dependencies into your current `pubspec.yaml`
+- `clean` to remove the starter folders/files from the current project and restore your original `pubspec.yaml`
 
 The installer uses a temporary folder in your system temp directory, not inside your project root.

@@ -29,7 +29,8 @@ fi
 echo "Choose install mode:"
 echo "  1) overwrite - replace matching files and update pubspec package name"
 echo "  2) adjust     - sync starter files without changing pubspec package name"
-read -r -p "Enter 1 or 2: " INSTALL_MODE
+echo "  3) clean     - remove starter folders/files from the current project"
+read -r -p "Enter 1, 2 or 3: " INSTALL_MODE
 
 case "$INSTALL_MODE" in
   1|overwrite|OVERWRITE)
@@ -38,8 +39,11 @@ case "$INSTALL_MODE" in
   2|adjust|ADJUST)
     INSTALL_MODE="adjust"
     ;;
+  3|clean|CLEAN)
+    INSTALL_MODE="clean"
+    ;;
   *)
-    echo "Invalid choice. Please run the script again and choose 1 or 2." >&2
+    echo "Invalid choice. Please run the script again and choose 1, 2 or 3." >&2
     exit 1
     ;;
 esac
@@ -79,9 +83,10 @@ if [[ "$INSTALL_MODE" == "overwrite" ]]; then
   find "$TARGET_ROOT/lib" -type f \( -name '*.dart' -o -name '*.md' \) -print0 \
     | xargs -0 perl -0pi -e "s/package:riverpod_base/package:$PROJECT_NAME/g"
 else
-  echo "🛠️ Adjust mode selected. Merging starter pubspec deps into your existing pubspec.yaml."
-  if [[ -f "$CURRENT_PUBSPEC_FILE" ]]; then
-    ruby - "$CURRENT_PUBSPEC_FILE" "$TMP_DIR/pubspec.yaml" "$TARGET_ROOT/pubspec.yaml" <<'RUBY'
+  if [[ "$INSTALL_MODE" == "adjust" ]]; then
+    echo "🛠️ Adjust mode selected. Merging starter pubspec deps into your existing pubspec.yaml."
+    if [[ -f "$CURRENT_PUBSPEC_FILE" ]]; then
+      ruby - "$CURRENT_PUBSPEC_FILE" "$TMP_DIR/pubspec.yaml" "$TARGET_ROOT/pubspec.yaml" <<'RUBY'
 current_path, starter_path, output_path = ARGV
 
 current_lines = File.readlines(current_path, chomp: false)
@@ -170,6 +175,17 @@ merged_lines = merge_section!(merged_lines, starter_lines, 'dev_dependencies')
 
 File.write(output_path, merged_lines.join)
 RUBY
+    fi
+  else
+    echo "🧹 Clean mode selected. Removing starter folders/files from the project."
+    rm -rf "$TARGET_ROOT/lib/core"
+    rm -rf "$TARGET_ROOT/lib/shared"
+    rm -rf "$TARGET_ROOT/assets"
+    rm -f "$TARGET_ROOT/for-agents.md"
+    rm -f "$TARGET_ROOT/README.md"
+    if [[ -f "$CURRENT_PUBSPEC_FILE" ]]; then
+      cp "$CURRENT_PUBSPEC_FILE" "$TARGET_ROOT/pubspec.yaml"
+    fi
   fi
 fi
 
