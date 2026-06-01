@@ -10,5 +10,6 @@ part of 'env.dart';
 // ignore_for_file: type=lint
 // generated_from: .env
 final class _Env {
-  static const String baseUrl = 'https://api.mathdefenders.com/api/v1';
+  static const String baseUrl =
+      'https://jalmas-test-generator-backed.vercel.app/api/v1';
 }

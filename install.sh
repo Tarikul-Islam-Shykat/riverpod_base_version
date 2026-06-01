@@ -48,24 +48,25 @@ case "$INSTALL_MODE" in
     ;;
 esac
 
-TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/rb_install.XXXXXX")"
+WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/rb_install.XXXXXX")"
+CLONE_DIR="$WORK_DIR/repo"
 TARGET_ROOT="$PWD"
-CURRENT_PUBSPEC_FILE="$TMP_DIR/current_pubspec.yaml"
+CURRENT_PUBSPEC_FILE="$WORK_DIR/current_pubspec.yaml"
 
 if [[ -f "$TARGET_ROOT/pubspec.yaml" ]]; then
   cp "$TARGET_ROOT/pubspec.yaml" "$CURRENT_PUBSPEC_FILE"
 fi
 
 cleanup() {
-  rm -rf "$TMP_DIR"
+  rm -rf "$WORK_DIR"
 }
 
 trap cleanup EXIT
 
 echo "📦 Cloning starter repo..."
-git clone --depth 1 --filter=blob:none --sparse "$SOURCE_REPO" "$TMP_DIR" >/dev/null
+git clone --depth 1 --filter=blob:none --sparse "$SOURCE_REPO" "$CLONE_DIR" >/dev/null
 
-cd "$TMP_DIR"
+cd "$CLONE_DIR"
 git sparse-checkout set --no-cone lib/core lib/shared lib/main.dart assets pubspec.yaml README.md for-agents.md >/dev/null
 
 echo "📁 Copying starter files into: $TARGET_ROOT"
@@ -76,6 +77,12 @@ cp README.md "$TARGET_ROOT/README.md"
 cp for-agents.md "$TARGET_ROOT/for-agents.md"
 
 if [[ "$INSTALL_MODE" == "overwrite" ]]; then
+  echo "🧹 Overwrite mode selected. Removing existing starter folders before copying."
+  rm -rf "$TARGET_ROOT/lib"
+  rm -rf "$TARGET_ROOT/assets"
+  rm -f "$TARGET_ROOT/README.md"
+  rm -f "$TARGET_ROOT/for-agents.md"
+
   echo "✏️ Updating package name to: $PROJECT_NAME"
   perl -0pi -e "s/^name:\\s*riverpod_base\\s*\$/name: $PROJECT_NAME/m" "$TARGET_ROOT/pubspec.yaml"
 
@@ -86,7 +93,7 @@ else
   if [[ "$INSTALL_MODE" == "adjust" ]]; then
     echo "🛠️ Adjust mode selected. Merging starter pubspec deps into your existing pubspec.yaml."
     if [[ -f "$CURRENT_PUBSPEC_FILE" ]]; then
-      ruby - "$CURRENT_PUBSPEC_FILE" "$TMP_DIR/pubspec.yaml" "$TARGET_ROOT/pubspec.yaml" <<'RUBY'
+      ruby - "$CURRENT_PUBSPEC_FILE" "$CLONE_DIR/pubspec.yaml" "$TARGET_ROOT/pubspec.yaml" <<'RUBY'
 current_path, starter_path, output_path = ARGV
 
 current_lines = File.readlines(current_path, chomp: false)

@@ -95,8 +95,53 @@ If you do not pass a project name, the script will try to use the current folder
 
 After you run it, the script will ask whether you want:
 
-- `overwrite` to replace matching files and update the package name
+- `overwrite` to remove the existing starter folders first, then copy fresh files and update the package name
 - `adjust` to sync starter files and merge only the missing starter dependencies into your current `pubspec.yaml`
 - `clean` to remove the starter folders/files from the current project and restore your original `pubspec.yaml`
 
-The installer uses a temporary folder in your system temp directory, not inside your project root.
+The installer uses a temporary workspace in your system temp directory, not inside your project root.
+
+## Feature Scaffold Script
+
+If you want to create a new feature folder quickly, run:
+
+```bash
+chmod +x create_feature.sh
+./create_feature.sh splash
+```
+
+You can also pass a second argument for the file base name:
+
+```bash
+./create_feature.sh "example/get-user-feature" user
+```
+
+If you run it with no arguments, it will prompt you for a feature name/path like:
+
+- `splash_screen`
+- `example/get-user-feature`
+
+What it creates:
+
+- `data/datasources/local`
+- `data/datasources/remote`
+- `data/models`
+- `data/repositories`
+- `domain/entities`
+- `domain/repositories`
+- `domain/usecases`
+- `presentation/pages`
+- `presentation/providers`
+- `presentation/widgets`
+
+It also creates starter files for:
+
+- entity
+- repository contract
+- use case
+- model
+- local data source
+- remote data source
+- repository implementation
+- provider
+- page

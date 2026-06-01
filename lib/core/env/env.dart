@@ -9,7 +9,7 @@ abstract class Env {
 
 /*
 create a  file naming .env in the root of the project and add the following content:
-BASE_URL=https://api.mathdefenders.com/api/v1
+BASE_URL=https://jalmas-test-generator-backed.vercel.app/api/v1
 
 thenn run the following command in the terminal:
 dart run build_runner build --delete-conflicting-outputs
