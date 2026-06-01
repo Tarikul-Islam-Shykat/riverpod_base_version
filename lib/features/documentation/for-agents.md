@@ -9,21 +9,23 @@ The goal is:
 - replace the project name in `pubspec.yaml`
 - avoid copying learning/demo-only files into the new project
 
-## Starter Install Command
+## What Should Go Into The New Project
 
-This repo includes a version helper that can be used from a fresh project root.
+Only the reusable starter code should be copied or synced into a fresh project.
 
-### From Project Root
+Include:
 
-```bash
-git clone --depth 1 --filter=blob:none --sparse git@github.com:Tarikul-Islam-Shykat/features.git .tmp_vc && cd .tmp_vc && git sparse-checkout set version-helper/version_checker && cd .. && mkdir -p lib/core/helper && cp -r .tmp_vc/version-helper/version_checker lib/core/helper/ && sh lib/core/helper/version_checker/install.sh && rm -rf .tmp_vc
-```
+- `lib/core`
+- reusable shared feature code
+- `assets`
+- dependency entries from `pubspec.yaml`
 
-### From `lib/core/helper/`
+Do not include:
 
-```bash
-git clone --depth 1 --filter=blob:none --sparse git@github.com:Tarikul-Islam-Shykat/features.git .tmp_vc && cd .tmp_vc && git sparse-checkout set version-helper/version_checker && cd .. && cp -r .tmp_vc/version-helper/version_checker ./ && sh version_checker/install.sh && rm -rf .tmp_vc
-```
+- `lib/notes`
+- `lib/features/example`
+- `lib/features/documentation`
+- other learning-only or handoff-only files
 
 ## What The Installer Should Do
 
@@ -54,9 +56,9 @@ These are the kinds of things that should be installed into the new project:
 
 These are example/learning files and should usually stay out of the new starter project:
 
+- `lib/notes`
 - `lib/features/example`
 - `lib/features/documentation`
-- `lib/notes`
 - any file that is only for learning, testing, or explaining this repo
 
 ## Folder Structure Rule
@@ -171,4 +173,3 @@ If another agent starts here, they should first check:
 - `lib/features/documentation/user_save_sync_checklist.md`
 
 Those files explain the structure, the Riverpod wiring, and the current feature flow.
-
