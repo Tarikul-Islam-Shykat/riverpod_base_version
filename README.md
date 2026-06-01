@@ -82,3 +82,20 @@ What it skips:
 - `lib/notes`
 - `lib/features/example`
 - `lib/features/documentation`
+
+## Installer Script
+
+If you want to sync the starter into a new project root, run:
+
+```bash
+sh install.sh your_new_project_name
+```
+
+If you do not pass a project name, the script will try to use the current folder name.
+
+After you run it, the script will ask whether you want:
+
+- `overwrite` to replace matching files and update the package name
+- `adjust` to sync starter files and merge only the missing starter dependencies into your current `pubspec.yaml`
+
+The installer uses a temporary folder in your system temp directory, not inside your project root.
