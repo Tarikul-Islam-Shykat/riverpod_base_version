@@ -64,16 +64,18 @@ If you are using this repo as a fresh Flutter project, continue with your normal
 Run this from the root of a new Flutter project to copy the starter files into it:
 
 ```bash
-git clone --depth 1 --filter=blob:none --sparse git@github.com:Tarikul-Islam-Shykat/riverpod_base_version.git .tmp_rb && cd .tmp_rb && git sparse-checkout set --no-cone lib/core lib/main.dart assets pubspec.yaml for-agents.md README.md && cd .. && cp -R .tmp_rb/lib ./ && cp -R .tmp_rb/assets ./ && cp .tmp_rb/pubspec.yaml ./ && cp .tmp_rb/for-agents.md ./ && cp .tmp_rb/README.md ./ && rm -rf .tmp_rb
+git clone --depth 1 --filter=blob:none --sparse git@github.com:Tarikul-Islam-Shykat/riverpod_base_version.git .tmp_rb && cd .tmp_rb && git sparse-checkout set --no-cone lib/core lib/core/services/local_storage_service/shared lib/shared lib/main.dart assets pubspec.yaml for-agents.md README.md && cd .. && cp -R .tmp_rb/lib ./ && cp -R .tmp_rb/assets ./ && cp .tmp_rb/pubspec.yaml ./ && cp .tmp_rb/for-agents.md ./ && cp .tmp_rb/README.md ./ && rm -rf .tmp_rb
 ```
 
 What it copies:
 
 - `lib/`
+- `lib/shared`
 - `assets/`
 - `pubspec.yaml`
 - `for-agents.md`
 - `README.md`
+- `lib/core/services/local_storage_service/shared/` and the other shared core service folders inside `lib/core`
 
 What it skips:
 
