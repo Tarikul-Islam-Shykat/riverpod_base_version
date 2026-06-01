@@ -9,3 +9,4 @@ Current docs:
 - [Terms Reference](terms.md)
 - [Riverpod Interview Guide](riverpod_terms_interview_guide.md)
 - [Provider Wiring Notes](provider_wiring_notes.md)
+- [For Agents](for-agents.md)
