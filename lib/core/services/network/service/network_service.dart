@@ -5,10 +5,10 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_base/core/services/network/config/dio_config.dart';
-import 'package:riverpod_base/core/services/network/error/failure.dart';
 
+import '../config/dio_config.dart';
 import '../error/error_handler.dart';
+import '../error/failure.dart';
 
 enum RequestMethod { get, post, put, delete, patch }
 

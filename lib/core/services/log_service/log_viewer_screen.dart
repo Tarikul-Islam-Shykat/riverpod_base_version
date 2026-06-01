@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_base/core/services/log_service/log_entry.dart';
-import 'package:riverpod_base/core/services/log_service/log_service.dart';
-import 'package:riverpod_base/core/services/spacing_service/app_spacing.dart';
-import 'package:riverpod_base/core/services/text-service/text-service.dart';
-import 'package:riverpod_base/shared/dialog/dialogs.dart';
+
+import '../../../shared/dialog/delete-confirmation-dialog.dart';
+import '../spacing_service/app_spacing.dart';
+import '../text-service/text-service.dart';
+import 'log_entry.dart';
+import 'log_service.dart';
 
 class LogViewerScreen extends ConsumerWidget {
   const LogViewerScreen({super.key});

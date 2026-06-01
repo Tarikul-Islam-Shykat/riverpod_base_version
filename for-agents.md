@@ -23,22 +23,7 @@ That means:
 
 ## Installer Note
 
-This document does not include a helper clone/install command.
-
-If you want to turn this repo into a starter project later, the reusable files should be selected from:
-
-- `lib/core`
-- reusable shared feature code
-- `assets`
-- `pubspec.yaml` dependency entries
-
-The learning/demo folders should stay out of that starter package:
-
-- `lib/notes`
-- `lib/features/example`
-- `lib/features/documentation`
-
-Also, `name: riverpod_base` in `pubspec.yaml` should be replaced by the new project name when used as a starter.
+See the root [`README.md`](README.md) for the starter project rules and package name replacement note.
 
 ## Top-Level Structure
 
