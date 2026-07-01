@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'core/router/app_router.dart';
+import 'features/example/todo-feature/presentation/pages/todo_page.dart';
 
 void main() {
   runApp(
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp.router(
+        return MaterialApp(
           title: 'Riverpod Base',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          routerConfig: appRouter,
+          home: const TodoPage(),
         );
       },
     );

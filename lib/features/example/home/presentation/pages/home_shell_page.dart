@@ -20,17 +20,48 @@ class HomeShellPage extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton(
-              onPressed: () => context.go(AppRoutes.users),
-              child: smallText(
-                text: 'Open Users Feature',
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: ElevatedButton(
+                  onPressed: () => context.go(AppRoutes.users),
+                  child: smallText(
+                    text: 'Open Users Feature',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: ElevatedButton(
+                  onPressed: () => context.go(AppRoutes.todo),
+                  child: smallText(
+                    text: 'Open Todo Feature',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: ElevatedButton(
+                  onPressed: () => context.go(AppRoutes.socialPosts),
+                  child: smallText(
+                    text: 'Open Social Posts',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

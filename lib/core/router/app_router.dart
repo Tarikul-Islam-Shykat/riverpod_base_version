@@ -8,6 +8,8 @@ import '../../features/auth/sign_up/presentation/pages/sign_up_page.dart';
 import '../../features/example/get-post-feature/presentation/pages/posts_page.dart';
 import '../../features/example/home/presentation/pages/home_shell_page.dart';
 import '../../features/example/get-user-feature/presentation/pages/users_page.dart';
+import '../../features/example/todo-feature/presentation/pages/todo_page.dart';
+import '../../features/example/social-post-feature/presentation/pages/social_posts_page.dart';
 import '../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/splash/presentation/pages/splash_screen.dart';
@@ -24,6 +26,8 @@ class AppRoutes {
   static const String editProfile = '/profile/edit';
   static const String posts = '/posts';
   static const String users = '/users';
+  static const String todo = '/todo';
+  static const String socialPosts = '/social-posts';
 }
 
 final appRouter = GoRouter(
@@ -79,6 +83,14 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.users,
       builder: (context, state) => const UsersPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.todo,
+      builder: (context, state) => const TodoPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.socialPosts,
+      builder: (context, state) => const SocialPostsPage(),
     ),
   ],
 );
